@@ -1,0 +1,30 @@
+---
+- name: install cron-apt
+  apt: name=cron-apt state=present
+  tags: 
+  - cron-apt
+  - cron-apt-install
+  
+- name: install apt source security.list
+  copy: src=security.list dest=/etc/apt/sources.list.d/security.list
+  tags:
+  - cron-apt 
+  - cron-apt-conf
+  
+- name: ensure security.debian.org is not duplicated in sources.list
+  lineinfile: dest=/etc/apt/sources.list regexp="^deb.+//security\.debian\.org.*" state=absent backup=yes
+  tags: 
+  - cron-apt
+  - cron-apt-conf
+  
+- name: install action.d/5-security
+  copy: src=action dest=/etc/cron-apt/action.d/5-security
+  tags:
+  - cron-apt 
+  - cron-apt-conf
+  
+- name: install config.d/5-security
+  copy: src=config dest=/etc/cron-apt/config.d/5-security
+  tags:
+  - cron-apt 
+  - cron-apt-conf
